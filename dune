@@ -1,0 +1,9 @@
+(executable
+ (name beam_splitter_test)
+ (modules beam_splitter_test grid_loader beam_splitter)
+ (libraries hardcaml hardcaml_waveterm)
+ (preprocess (pps ppx_deriving_hardcaml)))
+
+(env
+ (dev
+  (flags (:standard -w -26 -w -27 -w -32))))
