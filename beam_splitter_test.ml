@@ -39,6 +39,7 @@ let test () =
     Cyclesim.cycle sim;
   done;
 
-  Printf.printf "\nFinal split count: %d\n" (Bits.to_int !(outputs.split_count))
+  Printf.printf "\nTotal split count: %d" (Bits.to_int !(outputs.split_count));
+  Printf.printf "\nTotal timeline count: %d\n" (Bits.to_int !(outputs.total_timelines))
 
 let () = test ()

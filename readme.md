@@ -3,7 +3,7 @@
 
 1. Put the input into a file called `input.txt`
 2. Build with `dune build beam_splitter_test.exe`
-3. Run with `dune exec ./beam_splitter_test.exe`. Split count will be printed. 
+3. Run with `dune exec ./beam_splitter_test.exe`. Split count and total timelines will be printed. 
 
 ## Part - 1
 ### How it works
@@ -15,3 +15,20 @@
 6. In order to find the continuing beams that didn't hit a splitter in that row, `BeamSplitter` does `beams AND (NOT splitters)`
 7. Beams in the next round are then calculated as `left OR right OR continuing`
 8. `split_counter` is increased by the number of 1 bits in the `splits`
+
+## Part - 2
+### How it works
+Assuming that Q number of timelines have reached a point (x, y). The number of timelines at this point will change as
+1. If there is a splitter at (x, y), then Q timelines will continue from (x - 1, y) and another Q will continue from (x + 1, y).
+1. If there is no splitter at (x, y), then Q timelines will continue from (x, y).
+
+This means, in order to calculate total number of timelines, we need to store number of timelines in each point, and whenever there is a split, we need to add the timelines on that point to left and right neighbour. 
+
+To accomplish this
+1. `BeamSplitter` keeps a list of `wire`s, one for each column. `wire` is needed to be able to access neighbor's register values.
+1. `BeamSplitter` initializes with a single timeline on the start position
+1. On each column on the subsequent given rows, `BeamSplitter` calculates how many timelines from: 
+    - Left, if left had a splitter
+    - Right, if right had a splitter
+    - Same point, if it doesn't have a splitter.
+1. Total number of timelines after the final row then gives total timelines possible in the entire grid.
