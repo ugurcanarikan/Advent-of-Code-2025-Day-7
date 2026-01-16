@@ -1,9 +1,10 @@
 # Advent of Code - Day 7
 ### How to run
 
-1. Put the input into a file called `input.txt`
-2. Build with `dune build beam_splitter_test.exe`
-3. Run with `dune exec ./beam_splitter_test.exe`. Split count and total timelines will be printed. 
+1. Build with `dune build`
+2. Run with `dune exec ./beam_splitter_test.exe <path-to-input-file>`. Example: `dune exec ./beam_splitter_test.exe input.txt` (where input.txt is in the same directory as `beam_splitter_test.ml`)
+
+Split count, total timelines and whether there was an overflow while calculating the timeline count will be printed.
 
 ## Part - 1
 ### How it works
@@ -25,7 +26,7 @@ Assuming that Q number of timelines have reached a point (x, y). The number of t
 This means, in order to calculate total number of timelines, we need to store number of timelines in each point, and whenever there is a split, we need to add the timelines on that point to left and right neighbour. 
 
 To accomplish this
-1. `BeamSplitter` keeps a list of `wire`s, one for each column. `wire` is needed to be able to access neighbor's register values.
+1. `BeamSplitter` keeps an array of `wire`s, one for each column. `wire` is needed to be able to access neighbor's register values.
 1. `BeamSplitter` initializes with a single timeline on the start position
 1. On each column on the subsequent given rows, `BeamSplitter` calculates how many timelines from: 
     - Left, if left had a splitter

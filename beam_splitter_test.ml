@@ -1,8 +1,8 @@
 open Hardcaml
 open Beam_splitter
 
-let test () =
-  let (rows, width, height, start_column) = Grid_loader.load_grid "input.txt" in
+let test filename =
+  let (rows, width, height, start_column) = Grid_loader.load_grid filename in
   let splitter_bitmask_strings = Array.of_list (List.map Grid_loader.row_to_splitter_bitmask_string rows) in
 
   let start_column_bits =
@@ -42,4 +42,17 @@ let test () =
   Printf.printf "\nTotal timeline count: %d, total timeline overflow: %b\n"
     (Bits.to_int !(outputs.total_timelines)) (Bits.to_bool !(outputs.timeline_count_overflow))
 
-let () = test ()
+let () =
+  let parameter_count = Array.length Sys.argv in
+  if parameter_count < 2 then (
+    Printf.eprintf "Required input-file parameter is missing\n";
+    Printf.eprintf "Usage: dune exec %s <path-to-input-file>\n" (Filename.basename Sys.argv.(0));
+    exit 1
+  ) else if parameter_count > 2 then (
+    Printf.eprintf "Too many parameters given, expected: 1, actual: %d\n" (parameter_count - 1);
+    Printf.eprintf "Usage: dune exec %s <path-to-input-file>\n" (Filename.basename Sys.argv.(0));
+    exit 1
+  );
+
+  let filename = Sys.argv.(1) in
+  test filename
