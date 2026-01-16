@@ -15,7 +15,6 @@ let test () =
 
   let module Config = struct
     let grid_width = width
-    let grid_height = height
     let start_column_bits = start_column_bits
   end in
 

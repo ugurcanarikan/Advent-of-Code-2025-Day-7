@@ -3,13 +3,11 @@ open Signal
 
 module type Config = sig
   val grid_width : int
-  val grid_height : int
   val start_column_bits : int
 end
 
 module MakeBeamSplitter(Config : Config) = struct
   let grid_width = Config.grid_width
-  let grid_height = Config.grid_height
   let start_column_bits = Config.start_column_bits
 
   module I = struct
