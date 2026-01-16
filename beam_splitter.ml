@@ -55,12 +55,12 @@ module MakeBeamSplitter(Config : Config) = struct
     let timeline_counter_width = 64 in
     let zero_timeline = of_int ~width:timeline_counter_width 0 in
 
-    let current_counter_wires = List.init grid_width (fun _ ->
+    let current_counter_wires = Array.init grid_width (fun _ ->
       wire timeline_counter_width
     ) in
 
-    let next_values = List.mapi (fun col _ ->
-      let current_counter = List.nth current_counter_wires col in
+    let next_values = Array.mapi (fun col _ ->
+      let current_counter = current_counter_wires.(col) in
       mux2 start
         (mux2 (of_int ~width:grid_width col ==: uresize start_column grid_width)
           (of_int ~width:timeline_counter_width 1)
@@ -69,7 +69,7 @@ module MakeBeamSplitter(Config : Config) = struct
           let from_left = if col = 0
             then zero_timeline
             else
-              let prev_left = List.nth current_counter_wires (col - 1) in
+              let prev_left = current_counter_wires.(col - 1) in
               let is_left_splitter = bit splitters (col - 1) in
               mux2 is_left_splitter prev_left zero_timeline
           in
@@ -77,7 +77,7 @@ module MakeBeamSplitter(Config : Config) = struct
           let from_right = if col = (grid_width - 1)
             then zero_timeline
             else
-              let prev_right = List.nth current_counter_wires (col + 1) in
+              let prev_right = current_counter_wires.(col + 1) in
               let is_right_splitter = bit splitters (col + 1) in
               mux2 is_right_splitter prev_right zero_timeline
           in
@@ -89,13 +89,13 @@ module MakeBeamSplitter(Config : Config) = struct
         )
     ) current_counter_wires in
 
-    let timeline_counters = List.map2 (fun current_wire next_value ->
+    let timeline_counters = Array.map2 (fun current_wire next_value ->
       let register_out = reg spec next_value in
       current_wire <== register_out;
       register_out
     ) current_counter_wires next_values in
 
-    List.fold_left (+:) (zero_timeline) timeline_counters 
+    Array.fold_left (+:) (zero_timeline) timeline_counters 
   
   let create_timeline_count_overflow spec ~total_timelines ~start =
     let total_timelines_register = reg spec total_timelines in
