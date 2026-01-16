@@ -26,6 +26,7 @@ module MakeBeamSplitter(Config : Config) = struct
     type 'a t = {
       split_count : 'a; [@bits 32]
       total_timelines: 'a; [@bits 64]
+      timeline_count_overflow: 'a; [@bits 1]
     } [@@deriving sexp_of, hardcaml]
   end
 
@@ -102,8 +103,15 @@ module MakeBeamSplitter(Config : Config) = struct
       List.fold_left (+:) (zero_timeline) timeline_counters 
     in
 
+    let total_timelines_register = reg spec total_timelines in
+    let total_timelines_overflow = (~:(i.start)) &: (total_timelines <: total_timelines_register) in
+    let timeline_count_overflow = reg_fb spec ~width:1 ~f:(fun current ->
+      mux2 i.start gnd (current |: total_timelines_overflow)
+    ) in
+
     {
       split_count = split_counter;
       total_timelines = total_timelines;
+      timeline_count_overflow = timeline_count_overflow;
     }
 end

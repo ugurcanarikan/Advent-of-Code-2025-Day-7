@@ -32,3 +32,7 @@ To accomplish this
     - Right, if right had a splitter
     - Same point, if it doesn't have a splitter.
 1. Total number of timelines after the final row then gives total timelines possible in the entire grid.
+
+
+## Scaling
+As long as the timeline counter widths is updated, this can scale up 100x+ times. However, due to timelines count increasing exponentially, `BeamSplitter` uses 64 bits by default, but does flag whether an overflow happened.

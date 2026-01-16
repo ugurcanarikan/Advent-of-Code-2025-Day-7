@@ -40,6 +40,7 @@ let test () =
   done;
 
   Printf.printf "\nTotal split count: %d" (Bits.to_int !(outputs.split_count));
-  Printf.printf "\nTotal timeline count: %d\n" (Bits.to_int !(outputs.total_timelines))
+  Printf.printf "\nTotal timeline count: %d, total timeline overflow: %b\n"
+    (Bits.to_int !(outputs.total_timelines)) (Bits.to_bool !(outputs.timeline_count_overflow))
 
 let () = test ()
